@@ -23,6 +23,7 @@
 		7A04085016FAEF050083F041 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A04082B16FAEF050083F041 /* Foundation.framework */; };
 		7A04085816FAEF050083F041 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7A04085616FAEF050083F041 /* InfoPlist.strings */; };
 		7A04085B16FAEF050083F041 /* UIImageAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A04085A16FAEF050083F041 /* UIImageAppTests.m */; };
+		7A04086516FAF01C0083F041 /* neko_tsubaki_blue_car.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7A04086416FAF01C0083F041 /* neko_tsubaki_blue_car.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		7A04085716FAEF050083F041 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7A04085916FAEF050083F041 /* UIImageAppTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIImageAppTests.h; sourceTree = "<group>"; };
 		7A04085A16FAEF050083F041 /* UIImageAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UIImageAppTests.m; sourceTree = "<group>"; };
+		7A04086416FAF01C0083F041 /* neko_tsubaki_blue_car.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = neko_tsubaki_blue_car.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				7A04083816FAEF050083F041 /* AppDelegate.h */,
+				7A04086416FAF01C0083F041 /* neko_tsubaki_blue_car.jpg */,
 				7A04083916FAEF050083F041 /* AppDelegate.m */,
 				7A04084116FAEF050083F041 /* MainStoryboard.storyboard */,
 				7A04084416FAEF050083F041 /* ViewController.h */,
@@ -236,6 +239,7 @@
 				7A04083E16FAEF050083F041 /* Default@2x.png in Resources */,
 				7A04084016FAEF050083F041 /* Default-568h@2x.png in Resources */,
 				7A04084316FAEF050083F041 /* MainStoryboard.storyboard in Resources */,
+				7A04086516FAF01C0083F041 /* neko_tsubaki_blue_car.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
