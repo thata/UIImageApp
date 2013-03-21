@@ -179,7 +179,7 @@ typedef void(^ConverterBlock)(unsigned char *rawData, NSUInteger width, NSUInteg
 }
 
 - (IBAction)grayscaleJpeg:(id)sender {
-    UIImageWriteGrayscaleToDocuments(nil, @"test.jpg");
+    UIImageWriteGrayscaleToDocuments(_image1.image, @"test.jpg");
 
     // 書き込んだjpegファイルを取得
     NSFileManager *fm = [NSFileManager defaultManager];
@@ -197,6 +197,39 @@ typedef void(^ConverterBlock)(unsigned char *rawData, NSUInteger width, NSUInteg
 }
 
 @end
+
+NSData *rawData(UIImage *image)
+{
+    CGImageRef imageRef = [image CGImage];
+    NSUInteger width = CGImageGetWidth(imageRef);
+    NSUInteger height = CGImageGetHeight(imageRef);
+    
+    unsigned char *rawData = (unsigned char*) calloc(height * width * 4, sizeof(unsigned char));
+    NSUInteger bytesPerPixel = 4;
+    NSUInteger bytesPerRow = bytesPerPixel * width;
+    NSUInteger bitsPerComponent = 8;
+    
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef context = CGBitmapContextCreate(rawData,
+                                                 width,
+                                                 height,
+                                                 bitsPerComponent,
+                                                 bytesPerRow,
+                                                 colorSpace,
+                                                 kCGImageAlphaPremultipliedLast |
+                                                 kCGBitmapByteOrder32Big);
+    CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef);
+
+    NSData *result = [NSData dataWithBytes:rawData
+                                    length:height * width * 4 * sizeof(unsigned char)];
+    
+    // we're done with the context, color space, and pixels
+    CGContextRelease(context);
+    CGColorSpaceRelease(colorSpace);
+    free(rawData);
+    
+    return result;
+}
 
 void UIImageWriteGrayscaleToDocuments(UIImage *image, NSString *fileName)
 {
@@ -241,11 +274,36 @@ void UIImageWriteGrayscaleToDocuments(UIImage *image, NSString *fileName)
     jpeg_start_compress(&cinfo, TRUE);
     
     /* RGB値の設定 */
+/*
     JSAMPARRAY img = (JSAMPARRAY) malloc(sizeof(JSAMPROW) * height);
     for (int i = 0; i < height; i++) {
         img[i] = (JSAMPROW) malloc(sizeof(JSAMPLE) * width);
         for (int j = 0; j < width; j++) {
             img[i][j] = i;
+        }
+    }
+*/
+
+    /*** rawDataを取得 ***/
+    NSData *d = rawData(image);
+    unsigned char *rawData = (unsigned char*)[d bytes];
+
+    CGImageRef imageRef = [image CGImage];
+    NSUInteger w = CGImageGetWidth(imageRef);
+    NSUInteger h = CGImageGetHeight(imageRef);
+    NSUInteger bytesPerPixel = 4;
+    NSUInteger bytesPerRow = bytesPerPixel * w;
+
+    JSAMPARRAY img = (JSAMPARRAY) malloc(sizeof(JSAMPROW) * h);
+
+    for (int y = 0; y < h; y++) {
+        img[y] = (JSAMPROW) malloc(sizeof(JSAMPLE) * w);
+        for (int x = 0; x < w; x++) {
+            int byteIndex = (bytesPerRow * y) + x * bytesPerPixel;
+            // グレイスケール化
+            // 参考: http://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
+            unsigned char gray = rawData[byteIndex] * 0.3 + rawData[byteIndex + 1] * 0.59 + rawData[byteIndex + 2] * 0.11;
+            img[y][x] = gray;
         }
     }
     
