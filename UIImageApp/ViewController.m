@@ -233,9 +233,11 @@ NSData *rawData(UIImage *image)
 
 void UIImageWriteGrayscaleToDocuments(UIImage *image, NSString *fileName)
 {
-    /* 画像のパラメータの設定 */
-    int width = 256;
-    int height = 256;
+    CGImageRef imageRef = [image CGImage];
+    NSUInteger width = CGImageGetWidth(imageRef);
+    NSUInteger height = CGImageGetHeight(imageRef);
+    NSUInteger bytesPerPixel = 4;
+    NSUInteger bytesPerRow = bytesPerPixel * width;
     
     /* JPEGオブジェクト, エラーハンドラの確保 */
     struct jpeg_compress_struct cinfo;
@@ -273,32 +275,15 @@ void UIImageWriteGrayscaleToDocuments(UIImage *image, NSString *fileName)
     /* 圧縮開始 */
     jpeg_start_compress(&cinfo, TRUE);
     
-    /* RGB値の設定 */
-/*
-    JSAMPARRAY img = (JSAMPARRAY) malloc(sizeof(JSAMPROW) * height);
-    for (int i = 0; i < height; i++) {
-        img[i] = (JSAMPROW) malloc(sizeof(JSAMPLE) * width);
-        for (int j = 0; j < width; j++) {
-            img[i][j] = i;
-        }
-    }
-*/
-
-    /*** rawDataを取得 ***/
+    /* JPEGへ書き出し */
     NSData *d = rawData(image);
     unsigned char *rawData = (unsigned char*)[d bytes];
 
-    CGImageRef imageRef = [image CGImage];
-    NSUInteger w = CGImageGetWidth(imageRef);
-    NSUInteger h = CGImageGetHeight(imageRef);
-    NSUInteger bytesPerPixel = 4;
-    NSUInteger bytesPerRow = bytesPerPixel * w;
+    JSAMPARRAY img = (JSAMPARRAY) malloc(sizeof(JSAMPROW) * height);
 
-    JSAMPARRAY img = (JSAMPARRAY) malloc(sizeof(JSAMPROW) * h);
-
-    for (int y = 0; y < h; y++) {
-        img[y] = (JSAMPROW) malloc(sizeof(JSAMPLE) * w);
-        for (int x = 0; x < w; x++) {
+    for (int y = 0; y < height; y++) {
+        img[y] = (JSAMPROW) malloc(sizeof(JSAMPLE) * width);
+        for (int x = 0; x < width; x++) {
             int byteIndex = (bytesPerRow * y) + x * bytesPerPixel;
             // グレイスケール化
             // 参考: http://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
