@@ -15,5 +15,7 @@
 - (IBAction)copyImage2:(id)sender;
 - (IBAction)grayscaleImage:(id)sender;
 - (IBAction)negativeImage:(id)sender;
-
+- (IBAction)grayscaleJpeg:(id)sender;
 @end
+
+void UIImageWriteGrayscaleToDocuments(UIImage *image, NSString *fileName);
